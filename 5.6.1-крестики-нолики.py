@@ -9,7 +9,7 @@ dsize = len(data)
 
 currentPlayer = 0
 turnCount = 0
-isLinux = platform!='linux'
+isLinux = platform=='linux'
 
 # перевод курсора вверх в линукс
 def up(cnt=1):
