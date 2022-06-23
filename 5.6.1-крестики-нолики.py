@@ -1,10 +1,12 @@
 from sys import platform
 
-print('ход вводится в виде координат в формате "строка колонка"')
 signs = ['X', 'O']
+space = '-'
+
+print('ход вводится в виде координат в формате "строка колонка"')
 names = [input(f'имя игрока {i+1} ({signs[i]}): ') for i in range(2)]
 
-data = [[' ' for i in range(3)] for j in range(3)]
+data = [[space for i in range(3)] for j in range(3)]
 dsize = len(data)
 
 currentPlayer = 0
@@ -43,7 +45,7 @@ def check(v):
     if type(col) is str: return col
     
     # если ячейка занята
-    if data[row][col]!=' ':
+    if data[row][col]!=space:
         return f'ячейка ({row} {col}) уже занята'
 
     data[row][col] = signs[currentPlayer]
@@ -78,27 +80,27 @@ def checkRules():
     # строки
     for r in data:
         v = r[0]
-        if v==' ': continue
+        if v==space: continue
         cnt = sum([1 for i in range(dsize) if r[i]==v])
         if cnt==dsize: return v
 
     # колонки
     for c in range(dsize):
         v = data[0][c]
-        if v==' ': continue
+        if v==space: continue
         cnt = sum([1 for r in data if r[c]==v])
         if cnt==dsize: return v
 
     # диагонали
     # \
     v = data[0][0]
-    if v!=' ':
+    if v!=space:
         cnt = sum([1 for i in range(dsize) if data[i][i]==v])
         if cnt==dsize: return v
 
     # /
     v = data[dsize-1][0]
-    if v!=' ':
+    if v!=space:
         cnt = sum([1 for i in range(dsize) if data[dsize-i-1][i]==v])
         if cnt==dsize: return v
 
@@ -106,8 +108,8 @@ def checkRules():
     s = 0
     for r in data:
         for c in r:
-            if c!=' ': s += 1
-    if s==dsize**2: return ' '
+            if c!=space: s += 1
+    if s==dsize**2: return space
 
     return None
 
@@ -119,7 +121,7 @@ def main():
         refresh()
         gameOver = checkRules()
     refresh(False)
-    if gameOver==' ':
+    if gameOver==space:
         print(f'Ничья. Ходов: {turnCount}')
     else:
         name = names[signs.index(gameOver)]
