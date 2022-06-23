@@ -1,3 +1,4 @@
+from sys import platform
 
 print('ход вводится в виде координат в формате "строка колонка"')
 signs = ['X', 'O']
@@ -8,10 +9,11 @@ dsize = len(data)
 
 currentPlayer = 0
 turnCount = 0
+isLinux = platform!='linux'
 
 # перевод курсора вверх в линукс
 def up(cnt=1):
-    #print('\033[K\033[F'*cnt, end='')
+    if isLinux: print('\033[K\033[F'*cnt, end='')
     pass
 
 def getPlayerName(p):
