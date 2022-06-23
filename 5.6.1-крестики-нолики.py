@@ -14,7 +14,6 @@ isLinux = platform=='linux'
 # перевод курсора вверх в линукс
 def up(cnt=1):
     if isLinux: print('\033[K\033[F'*cnt, end='')
-    pass
 
 def getPlayerName(p):
     return f'{names[p]} ({signs[p]})'
