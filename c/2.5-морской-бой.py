@@ -1,5 +1,5 @@
 
-from random import randint
+from random import randint, choice
 
 class Ship:
     '''корабль'''
@@ -108,6 +108,8 @@ class Dash:
 
 class Game:
     def __init__(self, size):
+        self.debug = False
+        self.mode = 'set' # set=расстановка кораблей game=игра
         self.size = size
         self.dPlayer = Dash(size)
         self.dComp = Dash(size, fill=True)
@@ -117,18 +119,24 @@ class Game:
         Game.sMiss = 'o'
         Game.sArea = '░'
 
+        msg = 'Не переживай, ты ещё не раз проиграешь!/Что ж, это была неплохая попытка, кожаный.../Я так могу весь день делать.'
+        self.losMsg = choice(msg.split('/'))
+
+        msg = 'Что-то я отвлёкся, ты тут сам с собой что ли играешь?/Статистически ты всё равно проиграл./Опять мухлюешь, кожаный.'
+        self.winMsg = choice(msg.split('/'))
+
     @classmethod
     def getSign(cls, coords, dash:Dash, showZones=False, showCompShips=False):
         '''символ ячейки'''
-        if coords in dash._occupies:
-            rValue = cls.sShip
-        elif coords in dash._damaged:
+        if coords in dash._damaged: # повреждение
             rValue = cls.sDamage
-        elif coords in dash._miss:
+        elif coords in dash._miss: # промах
             rValue = cls.sMiss
-        elif showZones and coords in dash._restricted:
+        elif coords in dash._occupies: # корабль
+            rValue = cls.sShip
+        elif showZones and coords in dash._restricted: # зона вокруг корабля
             rValue = cls.sArea
-        elif showCompShips and coords in dash._occupies:
+        elif showCompShips and coords in dash._occupies: # корабль противника
             rValue = cls.sShip
         else:
             rValue = ' '
@@ -138,8 +146,8 @@ class Game:
         
         fieldWidth = self.size+1 # ширина поля с заголовком
         print('Ваш флот'.center(fieldWidth) + 'Противник'.center(fieldWidth))
-        w = [n for n in range(self.size)]
-        print((' '+w)*2)
+        w = [n+1 for n in range(self.size)]
+        print((' '+w)*2) # верхняя строка с номерами колонок
 
         d1 = self.dPlayer
         d2 = self.dComp
@@ -150,12 +158,27 @@ class Game:
                 coords = (x,y)
                 s1 += Game.getSign(coords, d1, showZones=showZones)
                 s2 += Game.getSign(coords, d2, showCompShips=showCompShips)
+            print(f'{y+1}{s1}{y+1}{s2}{y+1}')
+        print((' '+w)*2) # нижняя строка с номерами колонок
 
+    def run(self):
+
+        self.print()
+
+        if self.mode=='set':
+            print('Расставьте корабли. Введите координаты корабля в виде [строка колонка ориентация],'
+                +'\n\tгде строка ориентация - "h" или "v" для горизонтального или вертикального расположения')
+        else: print('Введите координаты выстрела в виде [строка колонка]')
+
+        cmd = input('Ввод: ')
+        if cmd=='debug': self.debug=True
 
 
 def test():
-    d=Dash()
+    d = Dash()
     d.fillShips()
+    print(d)
 
 if __name__=='__main__':
-    test()
+    game = Game(6)
+    game.run()
