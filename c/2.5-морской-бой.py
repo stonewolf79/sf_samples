@@ -447,7 +447,7 @@ class Game:
                         continue
             elif rcmd:
                 y, x = rcmd
-                result = self.dComp.shot(x, y)
+                result, ship = self.dComp.shot(x, y)
                 if result is None: 
                     err = 'недопустимая позиция'
                     continue
