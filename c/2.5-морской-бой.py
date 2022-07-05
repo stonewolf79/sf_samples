@@ -181,7 +181,7 @@ class Dash:
         1 если выстрел произведён успешно
         2 если утопил
         '''
-        print(f'выстрел в {y}:{x}')
+        print(f'выстрел в {x}:{y}')
         coords = (x,y)
         m = self._map
         if coords in m:
@@ -334,7 +334,7 @@ class Game:
             yield r
             if r==0 or r==2: # промазал или добил = дальше по плану
                 if r==2:
-                    self.dPlayer.setRestricted()
+                    self.dPlayer.setRestricted(ship)
                 self.lastResult = False
                 continue
             # куда-то попали, но не добили, надо добить
