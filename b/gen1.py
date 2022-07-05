@@ -7,3 +7,8 @@ def f():
 
 for v in f():
     print(v)
+
+g=f()
+for _ in range(10):
+    print(g.__next__())
+
