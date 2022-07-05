@@ -295,7 +295,7 @@ class Game:
         # сначала наугад по количеству клеток, потом заполнение
 
         for _ in range(self.size**2):
-            coords = (randint(1,self.size+1), randint(1,self.size+1))
+            coords = (randint(1,self.size), randint(1,self.size))
             yield coords
 
         if False:# для отладки
@@ -476,11 +476,13 @@ def test():
     #d = Dash()
     #d.fillShips()
     #print(d)
-    d = Dash()
-    d.live = 1
-
+    #d = Dash()
+    #d.live = 1
     g = Game(6)
-    g.checkInput('11 2 e')
+    #g.checkInput('11 2 e')
+    gc = g.getPlanCoords()
+    for q in range(50):
+        print(gc.__next__())
 
 
 if __name__=='__main__':
