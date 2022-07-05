@@ -181,6 +181,7 @@ class Dash:
         1 если выстрел произведён успешно
         2 если утопил
         '''
+        print(f'выстрел в {y}:{x}')
         coords = (x,y)
         m = self._map
         if coords in m:
@@ -291,20 +292,20 @@ class Game:
 
     def getPlanCoords(self):
         '''плановая координата если не было попадания'''
+        # сначала наугад по количеству клеток, потом заполнение
 
-        # сначала пройдём по диагонали \
-        for i in range(self.size):
-            yield (i+1, i+1)
+        for _ in range(self.size**2):
+            coords = (randint(1,self.size+1), randint(1,self.size+1))
+            yield coords
 
-        # теперь через один всё вокруг
-        for k in range(2, self.size, 2):
+        if False:# для отладки
+            # сначала пройдём по диагонали \
             for i in range(self.size):
-                yield (i+1, k+i+1)
-                yield (k+i+1, i+1)
+                yield (i+1, i+1)
 
-        # заполним что осталось тупо сверху вниз
-        for i in range(1, self.size, 2):
-            for k in range(1, self.size, 2):
+        # заполним что осталось
+        for i in range(self.size):
+            for k in range(self.size):
                 yield (i+1, k+1)
 
         yield None
@@ -399,6 +400,9 @@ class Game:
             print(err)
             err = ''
 
+            # счёт
+            print(f'счёт: человек {self.dPlayer.live} компьютер {self.dComp.live}')
+
             if self.mode=='set':
                 shipMsg = f'[ режим установки корабля. длина = {mShipsConfig[currentShip]} ] '
             else: shipMsg = ''
@@ -459,13 +463,14 @@ class Game:
 
             # ход компьютера
             ok = True
-            while(ok): # стреляем пока попадём или неправильные координаты
+            while(ok): # стреляем пока попадаем или неправильные координаты
                 r = ai.__next__()
-                ok = r is None or r==1
+                ok = r is None or r==1 or r==2
                 if r==2:
-                    err = self.losMsg
-                    self.mode = 'gameover'
-                    continue
+                    if self.dPlayer.live==0:
+                        err = self.losMsg
+                        self.mode = 'gameover'
+                        break
 
 def test():
     #d = Dash()
