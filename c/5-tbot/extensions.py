@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
+from locale import currency
 import requests, json
 import lxml.html as html
+from telebot import types as tt
 
 class APIException(BaseException):
     pass
@@ -22,7 +24,7 @@ class Currencies:
         # курсы валют 
         # xml  Центробанк   https://www.cbr.ru/scripts/XML_daily.asp
         # json РБК          https://quote.ru/v5/ajax/index
-        text = requests.get('https://quote.ru/v5/ajax/index').content
+        text = Currencies.getResource('https://quote.ru/v5/ajax/index', 'Запрос курсов валют')
         jdata = json.loads(text)
         tree = html.document_fromstring(jdata['currency'])
         # indices__name
@@ -45,7 +47,7 @@ class Currencies:
         return data
     
     @staticmethod
-    def getResource(url, name):
+    def getResource(url:str, name:str):
         '''возвращает страницу с замером времени или None'''
         tstart = datetime.now()
         print(f'{name} ... ', end='')
