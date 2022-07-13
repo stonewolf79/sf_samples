@@ -16,7 +16,7 @@ markup = None # кнопки
 bot = telebot.TeleBot(token)
 
 def answer(msg, text):
-    bot.send_message(msg.from_user.id, text)
+    bot.reply_to(msg, text)
 
 def showHelp(msg:tt.Message):
     text = f'''Доброго времени суток, {msg.from_user.first_name}
@@ -48,28 +48,27 @@ def proc_debug(msg:tt.Message):
 
 @bot.message_handler(commands=['calc'])
 def proc_text(msg:tt.Message):
-    params = [p.strip() for p in msg.text.lower().split(' ') if p[0]!='/']
-    if len(params)!=3:
-        answer(msg, 'неправильный формат запроса')
-        return
-    err = False # ошибки формата обрабатываем сразу все
-    if not Currencies.curr: Currencies.pull()
-    if params[0] not in Currencies.curr:
-        answer(msg, f'валюты {params[0]} нет в списке допустимых')
-        err = True
-    if params[1] not in Currencies.curr:
-        answer(msg, f'валюты {params[1]} нет в списке допустимых')
-        err = True
-    if not params[2].isnumeric():
-        answer(msg, f'значение "{params[2]}" не является числом')
-        err = True
-    if err: return
-    c1, c2, amount = params[0], params[1], float(params[2])
-    err, value = Currencies.get_price(c1, c2, amount)
-    if err is not None:
-        answer(msg, err)
-        return
-    answer(msg, f'{amount} {Currencies.short[c1]} = {value:.2f} {Currencies.short[c2]}')
+    try:
+        params = [p.strip() for p in msg.text.lower().split(' ') if p[0]!='/']
+        if len(params)!=3:
+            raise APIException('неправильный формат запроса')
+        err = '' # ошибки формата обрабатываем сразу все
+        if not Currencies.curr: Currencies.pull()
+        if params[0] not in Currencies.curr:
+            err = f'валюты {params[0]} нет в списке допустимых'
+        if params[1] not in Currencies.curr:
+            err = f'валюты {params[1]} нет в списке допустимых'
+        if not params[2].isnumeric():
+            err = f'значение "{params[2]}" не является числом'
+        if err: raise APIException(err)
+        c1, c2, amount = params[0], params[1], float(params[2])
+        err, value = Currencies.get_price(c1, c2, amount)
+    except APIException as e:
+        answer(msg, f'ошибка в API: {e}')
+    except Exception as e:
+        answer(msg, f'что-то пошло не так: {e}')
+    else:
+        answer(msg, f'{amount} {Currencies.short[c1]} = {value:.2f} {Currencies.short[c2]}')
     
 
 print('Бот запущен.')
