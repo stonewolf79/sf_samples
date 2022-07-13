@@ -9,6 +9,7 @@ class Currencies:
 
     lastUpdate = None # последнее обновление
     curr = None # валюты
+    rub = 'rub'
     data = {} # данные курсов
     updTime = timedelta(minutes=10) # минимальный интервал обновления
 
@@ -81,12 +82,22 @@ class Currencies:
         Currencies.curr = set(mCurr)
 
     @staticmethod
-    def get_price(base, qoute, amount=1):
+    def get_price(base, quote, amount=1, recurse=True):
         '''пересчёт курса'''
-        if not Currencies.data: Currencies.pull()
-        if not base in Currencies.data:
-            err = f'валюту "{base}" невозможно преобразовать' # если вдруг произошло странное
-        elif not qoute in Currencies.data[base]:
-            # прямого курса нет, проверяем вторую на курс с долларом
-            if qoute in Currencies.data['usd']:
-                value = 
+        cls = Currencies
+        rub = cls.rub
+        if not cls.data: cls.pull()
+        if base in cls.data and quote in cls.data[base]:
+            return None, amount*cls.data[base][quote] # прямой курс
+        elif quote in cls.data and base in cls.data[quote]:
+            return None, amount/cls.data[quote][base] # обратный курс
+        # прямого курса нет, проверяем курсы валют к доллару
+        if base in cls.data and cls.rub in cls.data[base] and rub in cls.data[quote]:
+            return None, amount*cls.data[base][rub]/cls.data[quote][rub]
+        # прямого кросс-курса нет, проверяем обратный кросс
+        if recurse: 
+            err, value = cls.get_price(quote, base, recurse=False)
+            if err is None: return None, amount/value
+        # ничего не нашли :'(
+        return f'валюту "{cls.short[base]}" невозможно преобразовать 😢', None 
+            

@@ -24,7 +24,7 @@ def showHelp(msg:tt.Message):
     /start и /help - эта справка
     /values - список доступных валют
     /calc валюта1 валюта2 количество - пересчитать количество валюты1 в валюту2. 
-    \tесли прямой пары валют нет, будет использован кросс-курс через доллар сша.
+    \tесли прямой пары валют нет, будет использован кросс-курс через рубли РФ.
     '''
     answer(msg, text)
 
@@ -41,13 +41,19 @@ def cmd_help(msg:tt.Message):
 def cmd_values(msg:tt.Message):
     showCurrents(msg)
 
+@bot.message_handler(commands=['debug'])
+def proc_debug(msg:tt.Message):
+    Currencies.pull()
+    answer(msg, str(Currencies.data))
+
 @bot.message_handler(commands=['calc'])
 def proc_text(msg:tt.Message):
-    params = [p.strip() for p in msg.text.lower().split(' ')]
+    params = [p.strip() for p in msg.text.lower().split(' ') if p[0]!='/']
     if len(params)!=3:
         answer(msg, 'неправильный формат запроса')
         return
     err = False # ошибки формата обрабатываем сразу все
+    if not Currencies.curr: Currencies.pull()
     if params[0] not in Currencies.curr:
         answer(msg, f'валюты {params[0]} нет в списке допустимых')
         err = True
@@ -63,7 +69,7 @@ def proc_text(msg:tt.Message):
     if err is not None:
         answer(msg, err)
         return
-    answer(msg, f'{c1} x {amount} => {c2} = {value}')
+    answer(msg, f'{amount} {Currencies.short[c1]} = {value:.2f} {Currencies.short[c2]}')
     
 
 print('Бот запущен.')
