@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from locale import currency
 import requests, json
 import lxml.html as html
 from telebot import types as tt
