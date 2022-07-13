@@ -55,12 +55,12 @@ def proc_text(msg:tt.Message):
         err = '' # ошибки формата обрабатываем сразу все
         if not Currencies.curr: Currencies.pull()
         if params[0] not in Currencies.curr:
-            err = f'валюты {params[0]} нет в списке допустимых'
+            err += f'валюты {params[0]} нет в списке допустимых\n'
         if params[1] not in Currencies.curr:
-            err = f'валюты {params[1]} нет в списке допустимых'
+            err += f'валюты {params[1]} нет в списке допустимых\n'
         if not params[2].isnumeric():
-            err = f'значение "{params[2]}" не является числом'
-        if err: raise APIException(err)
+            err += f'значение "{params[2]}" не является числом\n'
+        if err: raise APIException(err.strip())
         c1, c2, amount = params[0], params[1], float(params[2])
         err, value = Currencies.get_price(c1, c2, amount)
     except APIException as e:
