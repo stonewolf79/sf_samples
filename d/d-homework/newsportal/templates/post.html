@@ -1,0 +1,12 @@
+{% extends 'flatpages/default.html' %} 
+{% load custom_filters %}
+ 
+{% block title %}
+{{ info.title }}
+{% endblock title %}
+ 
+{% block content %}
+<h1>{{ info.title }}</h1>
+<div align="right">Дата: {{ info.created|date:'d.m.y' }}</div>
+<div align="justify">{{ info.text|censor }}</div>
+{% endblock content %}

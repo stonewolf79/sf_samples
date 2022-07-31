@@ -1,0 +1,25 @@
+{% extends 'flatpages/default.html' %} 
+{% load custom_filters %}
+{% block title %}
+<title>Статьи</title>
+{% endblock title %}
+{% block content %}
+<table class="table table-primary">
+    <thead>
+        <th>Заголовок</th>
+        <th>Опубликовано</th>
+        <th>Новость</th>
+    </thead>
+    <tbody>
+        {% for article in posts %}
+        {% if article.pType == "A" %}
+        <tr>
+            <td><a href="{{ article.pk }}">{{ article.title }}</a></td>
+            <td style="padding-left:20px; padding-right:20px">{{ article.created|date:'y.m.d G:i:s' }}</td>
+            <td>{{ article.text|truncatechars:20|censor }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+    {% endblock content %}

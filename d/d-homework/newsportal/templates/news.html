@@ -1,0 +1,52 @@
+{% extends 'flatpages/default.html' %} 
+{% load custom_filters %}
+{% block title %}
+Новости
+{% endblock title %}
+{% block content %}
+<!-- считаем только количество новостей, а не всех статей -->
+<div align="left">Всего новостей: {{ news|newscnt }}</div>
+
+<form action="" method="get">
+	{{ filterset.form.as_p }}
+	<input type="submit" value="Найти" />
+</form>
+
+<table class="table table-primary">
+    <thead>
+        <th>Заголовок</th>
+        <th>Опубликовано</th>
+        <th>Новость</th>
+    </thead>
+    <tbody>
+        {% for article in news %}
+        {% if article.pType == "N" %}
+        <tr>
+            <td><a href="{{ article.pk }}">{{ article.title }}</a></td>
+            <td style="padding-left:20px; padding-right:20px">{{ article.created|date:'y.m.d G:i:s' }}</td>
+            <td>{{ article.text|truncatechars:20|censor }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+<div>страниц: {{ page_obj.num_pages }}</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                {% if page_obj.paginator.num_pages > 1 %}
+                <li class="nav-item"><a class="nav-link" href="/news?page=1">Первая</a></li>
+                {% if page_obj.has_previous %}
+                <li class="nav-item"><a class="nav-link" href="/news?page={{ page_obj.previous_page_number }}">Предыдущая</a></li>
+                {% endif %}
+                {% if page_obj.has_next %}
+                <li class="nav-item"><a class="nav-link" href="/news?page={{ page_obj.next_page_number }}">Следующая</a></li>
+                {% endif %}
+                <li class="nav-item"><a class="nav-link" href="/news?page={{ page_obj.paginator.num_pages }}">Последняя</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+{% endblock content %}
