@@ -1,14 +1,20 @@
-from datetime import datetime
 from django import template
 register = template.Library()
 
 from main.models import Post
 
-@register.filter()
-def newscnt(val):
-    cnt = 0
-    for p in val:
-        if p.pType=='N': cnt += 1
+@register.simple_tag(takes_context=True)
+def url_replace(context, **kwargs):
+    d = context['request'].GET.copy()
+    for k, v in kwargs.items():
+        d[k] = v
+    r = d.urlencode()
+    print(r)
+    return r
+
+@register.simple_tag()
+def newscnt(name):
+    cnt = Post.objects.filter(pType=name).count()
     return cnt
 
 badWords = 'редиска,сволочь'.split(',')

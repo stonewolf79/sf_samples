@@ -5,10 +5,13 @@
 {% endblock title %}
 {% block content %}
 <!-- считаем только количество новостей, а не всех статей -->
-<div align="left">Всего новостей: {{ news|newscnt }}</div>
+<div align="left">Всего новостей: {% newscnt name="N" %}</div>
 
 <form action="" method="get">
-	{{ filterset.form.as_p }}
+	<!-- {{ filterset.form.as_p }} -->
+    Заголовок<input type="text" name="title__icontains">
+    Содержимое<input type="text" name="text__icontains">
+    Дата с<input type="date" name="created__gte" />
 	<input type="submit" value="Найти" />
 </form>
 
@@ -16,7 +19,7 @@
     <thead>
         <th>Заголовок</th>
         <th>Опубликовано</th>
-        <th>Новость</th>
+        <th>Текст</th>
     </thead>
     <tbody>
         {% for article in news %}
@@ -36,14 +39,14 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 {% if page_obj.paginator.num_pages > 1 %}
-                <li class="nav-item"><a class="nav-link" href="/news?page=1">Первая</a></li>
+                <li class="nav-item"><a class="nav-link" href="/news?{% url_replace page=1 %}">Первая</a></li>
                 {% if page_obj.has_previous %}
-                <li class="nav-item"><a class="nav-link" href="/news?page={{ page_obj.previous_page_number }}">Предыдущая</a></li>
+                <li class="nav-item"><a class="nav-link" href="/news?{% url_replace page=page_obj.previous_page_number %}">Предыдущая</a></li>
                 {% endif %}
                 {% if page_obj.has_next %}
-                <li class="nav-item"><a class="nav-link" href="/news?page={{ page_obj.next_page_number }}">Следующая</a></li>
+                <li class="nav-item"><a class="nav-link" href="/news?{% url_replace page=page_obj.next_page_number %}">Следующая</a></li>
                 {% endif %}
-                <li class="nav-item"><a class="nav-link" href="/news?page={{ page_obj.paginator.num_pages }}">Последняя</a></li>
+                <li class="nav-item"><a class="nav-link" href="/news?{% url_replace page=page_obj.paginator.num_pages %}">Последняя</a></li>
                 {% endif %}
             </ul>
         </div>
