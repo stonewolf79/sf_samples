@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth.models import User
 
@@ -53,6 +54,13 @@ class Post(models.Model):
         authorName = self.author.user.username
         #return '' # заглушка для отладки
         return f'{authorName} - тип {self.pType} рейтинг={self.rating} - {list(self.cat.all())} - "{self.title[:20]}..." - "{self.text[:20]}..."'
+
+    def get_absolute_url(self):
+        if self.pType=='A': name = 'articles'
+        else: name = 'news'
+        r = reverse(name, args=[str(self.pk)])
+        return r
+
 
 class Comment(models.Model):
 

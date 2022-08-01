@@ -5,29 +5,35 @@
 {% endblock title %}
 {% block content %}
 <!-- считаем только количество новостей, а не всех статей -->
-<div align="left">Всего новостей: {% newscnt name="N" %}</div>
+<div align="left" style="width: 100%">
+    Всего новостей: {% newscnt name="N" %}
+    <form action="/news/create" style="display: inline-block;"><input type="submit" value="Добавить ещё одну"/></form>
+</div>
 
 <form action="" method="get">
-	<!-- {{ filterset.form.as_p }} -->
-    Заголовок<input type="text" name="title__icontains">
-    Содержимое<input type="text" name="text__icontains">
-    Дата с<input type="date" name="created__gte" />
+    Заголовок <input type="text" name="title__icontains">
+    Содержимое <input type="text" name="text__icontains">
+    Дата с <input type="date" name="created__gte" />
 	<input type="submit" value="Найти" />
 </form>
 
 <table class="table table-primary">
     <thead>
+        <th/>
         <th>Заголовок</th>
         <th>Опубликовано</th>
         <th>Текст</th>
+        <th/>
     </thead>
     <tbody>
         {% for article in news %}
         {% if article.pType == "N" %}
         <tr>
+            <td><a href="/news/{{ article.pk }}/edit">📝</a></td>
             <td><a href="{{ article.pk }}">{{ article.title }}</a></td>
             <td style="padding-left:20px; padding-right:20px">{{ article.created|date:'y.m.d G:i:s' }}</td>
             <td>{{ article.text|truncatechars:20|censor }}</td>
+            <td><a href="/news/{{ article.pk }}/delete">❌</a></td>
         </tr>
         {% endif %}
         {% endfor %}

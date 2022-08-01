@@ -4,19 +4,26 @@
 <title>Статьи</title>
 {% endblock title %}
 {% block content %}
+
+<form action="/articles/create" style="display: inline-block;"><input type="submit" value="Добавить статью"/></form>
+
 <table class="table table-primary">
     <thead>
+        <th/>
         <th>Заголовок</th>
         <th>Опубликовано</th>
-        <th>Новость</th>
+        <th>Текст</th>
+        <th/>
     </thead>
     <tbody>
         {% for article in posts %}
         {% if article.pType == "A" %}
         <tr>
+            <td><a href="/articles/{{ article.pk }}/edit">📝</a></td>
             <td><a href="{{ article.pk }}">{{ article.title }}</a></td>
             <td style="padding-left:20px; padding-right:20px">{{ article.created|date:'y.m.d G:i:s' }}</td>
             <td>{{ article.text|truncatechars:20|censor }}</td>
+            <td><a href="/articles/{{ article.pk }}/delete">❌</a></td>
         </tr>
         {% endif %}
         {% endfor %}

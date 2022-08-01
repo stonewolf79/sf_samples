@@ -1,0 +1,15 @@
+{% extends 'flatpages/default.html' %} 
+{% load custom_filters %}
+ 
+{% block title %}
+{{ info.title }}
+{% endblock title %}
+ 
+{% block content %}
+<h1>{{ info.title }}</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    <p>Действительно удалить "{{ info.title }}"?</p>
+    <input type="submit" value="УДАЛИТЬ" />
+</form>
+{% endblock content %}
