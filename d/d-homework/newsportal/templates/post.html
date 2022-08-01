@@ -6,7 +6,7 @@
 {% endblock title %}
  
 {% block content %}
-<h1>{{ info.title }}</h1>
+<h3>{{ info.title }}</h3>
 <div align="right">Дата: {{ info.created|date:'d.m.y' }}</div>
 <div align="justify">{{ info.text|censor }}</div>
 {% endblock content %}
