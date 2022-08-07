@@ -58,7 +58,9 @@ class Post(models.Model):
     def get_absolute_url(self):
         if self.pType=='A': name = 'articles'
         else: name = 'news'
-        r = reverse(name, args=[str(self.pk)])
+        #r = reverse(name, args=[self.pk]) # не работает
+        #r = reverse(name, kwargs={'pk':self.pk}) # не работает
+        r = f'/{name}/{self.pk}'
         return r
 
 
@@ -128,3 +130,9 @@ class Author(models.Model):
         ma = list(Author.objects.all())
         for a in ma: a.update_rating()
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    google = models.CharField(max_length=50, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.user.username}'

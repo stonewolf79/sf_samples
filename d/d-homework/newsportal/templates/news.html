@@ -1,8 +1,6 @@
 {% extends 'flatpages/default.html' %} 
 {% load custom_filters %}
-{% block title %}
-Новости
-{% endblock title %}
+{% block title %}Новости{% endblock title %}
 {% block content %}
 <!-- считаем только количество новостей, а не всех статей -->
 <div align="left" style="width: 100%">
@@ -10,11 +8,15 @@
     <form action="/news/create" style="display: inline-block;"><input type="submit" value="Добавить ещё одну"/></form>
 </div>
 
+<style>
+    .form-control { display: inline-block }
+</style>
+
 <form action="" method="get">
-    Заголовок <input type="text" name="title__icontains">
-    Содержимое <input type="text" name="text__icontains">
-    Дата с <input type="date" name="created__gte" />
-	<input type="submit" value="Найти" />
+    Заголовок <input class="form-control" type="text" name="title__icontains">
+    Содержимое <input class="form-control" type="text" name="text__icontains">
+    Дата с <input class="form-control" type="date" name="created__gte">
+	<input class="btn btn-outline-secondary" type="submit" value="Найти">
 </form>
 
 <table class="table table-primary">
@@ -39,7 +41,7 @@
         {% endfor %}
     </tbody>
 </table>
-<div>страниц: {{ page_obj.num_pages }}</div>
+<div>страниц: {{ page_obj.paginator.num_pages }}</div>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container">
         <div class="collapse navbar-collapse" id="navbarResponsive">

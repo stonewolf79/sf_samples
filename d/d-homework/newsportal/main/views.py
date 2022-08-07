@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import *
 from .filters import *
@@ -44,9 +45,10 @@ class PostCreate(CreateView):
         name = self.request.path.split('/')[1]
         return reverse_lazy(name)
 
-class PostEdit(UpdateView):
+class PostEdit(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = PostForm
+    context_object_name = 'info' # переменная в шаблоне
     template_name = 'post_edit.html'
 
 class PostDelete(DeleteView):
@@ -58,3 +60,20 @@ class PostDelete(DeleteView):
     def get_success_url(self, **kwargs):
         name = self.request.path.split('/')[1]
         return reverse_lazy(name)
+
+class Profile(TemplateView):
+    model = Profile
+    context_object_name = 'info' # переменная в шаблоне
+    template_name = 'profile.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(Profile, self).get_context_data(*args, **kwargs)
+        context['user'] = self.request.user
+        context['is_author'] = self.request.user.groups.filter(name = 'authors').exists()
+        return context
+
+class RegView(CreateView):
+    model = User
+    form_class = RegForm
+    success_url = '/'
+

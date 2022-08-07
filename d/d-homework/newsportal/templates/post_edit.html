@@ -7,7 +7,14 @@
  
 {% block content %}
 <h1>{{ info.title }}</h1>
+ptype="{{ info }}"
 <form action="" method="post">
+    {% if info.pType %}
+    <input type="radio" name="pType" value="A">
+    <input type="radio" name="pType" value="N">
+    {% else %}
+    <input type="hidden" name="pType" value="{{ info.pType }}">
+    {% endif %}
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Записать" />

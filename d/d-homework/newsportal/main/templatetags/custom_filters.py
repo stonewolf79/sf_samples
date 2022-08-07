@@ -9,7 +9,7 @@ def url_replace(context, **kwargs):
     for k, v in kwargs.items():
         d[k] = v
     r = d.urlencode()
-    print(r)
+    #print(r)
     return r
 
 @register.simple_tag()

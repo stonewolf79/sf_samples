@@ -1,11 +1,11 @@
 {% extends 'flatpages/default.html' %} 
 {% load custom_filters %}
-{% block title %}
-<title>Статьи</title>
-{% endblock title %}
+{% block title %}Статьи{% endblock title %}
 {% block content %}
 
-<form action="/articles/create" style="display: inline-block;"><input type="submit" value="Добавить статью"/></form>
+<form action="/articles/create" style="display: inline-block;">
+    <input value="Добавить статью" class="btn btn-outline-secondary" type="submit"/>
+</form>
 
 <table class="table table-primary">
     <thead>

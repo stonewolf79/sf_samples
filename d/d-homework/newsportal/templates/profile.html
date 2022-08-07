@@ -1,0 +1,13 @@
+{% extends 'flatpages/default.html' %} 
+{% load custom_filters %}
+ 
+{% block title %}Профиль: {{ user.username }}{% endblock title %}
+ 
+{% block content %}
+<form>
+    {% csrf_token %}
+    <h1>{{ user.username }}</h1>
+    <!--input value="Стать автором" type="button" class="btn btn-outline-primary" action="/sign/upgrade"-->
+    <button class="btn btn-outline-primary"><a href="/sign/upgrade">Стать автором</a></button>
+</form>
+{% endblock content %}
