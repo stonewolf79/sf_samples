@@ -25,4 +25,5 @@ urlpatterns = [
     path('sign/', include('sign.urls')),
     path('profile/', Profile.as_view(), name='profile'),
     path('accounts/', include('allauth.urls')),
+    path('accounts/reg/', RegView.as_view(template_name = 'reg.html'), name='reg'),
 ]

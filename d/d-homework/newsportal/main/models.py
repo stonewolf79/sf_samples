@@ -6,9 +6,14 @@ from django.contrib.auth.models import User
 
 class Category(models.Model):
     name = models.CharField(unique=True, max_length=255, default='без категории')
+    subscribers = models.ManyToManyField(User, through='UserCats')
 
     def __str__(self):
         return f'{self.name}'
+
+class UserCats(models.Model):
+    usr = models.ForeignKey(User, on_delete=models.CASCADE)
+    cat = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 postType = [('A','article'),('N','news')]
 
@@ -63,6 +68,12 @@ class Post(models.Model):
         r = f'/{name}/{self.pk}'
         return r
 
+class Subscription(models.Model):
+    author = models.ForeignKey('Author', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __repr__(self) -> str:
+        return f'{self.user} - {self.author}'
 
 class Comment(models.Model):
 

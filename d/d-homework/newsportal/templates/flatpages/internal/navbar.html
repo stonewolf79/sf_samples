@@ -17,7 +17,7 @@
                     <a class="nav-link" href="{% url 'profile' %}">Профиль ({{ user.username }})</a>
                     {% else %}
                     <a class="nav-link" href="/accounts/login">Войти</a>
-                    <a class="nav-link" href="/accounts/signup">Регистрация</a>
+                    <a class="nav-link" href="/accounts/reg">Регистрация</a>
                     {% endif %}
                 </li>
                 {% if user.username %}
